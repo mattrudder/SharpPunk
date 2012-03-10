@@ -63,14 +63,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmbedAttribute.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="Platform\IPlatformFactory.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Graphic.cs" />
+    <Compile Include="Platform\PlatformFactory.cs" />
     <Compile Include="Platform\IRenderContext.cs" />
     <Compile Include="Platform\Window.cs" />
     <Compile Include="Platform\Windows\Direct3D10RenderContext.cs" />
     <Compile Include="Platform\Windows\FormsWindow.cs" />
     <Compile Include="Platform\Windows\WindowsPlatformFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceInfo.cs" />
+    <Compile Include="Screen.cs" />
+    <Compile Include="Tween.cs" />
+    <Compile Include="Tweener.cs" />
+    <Compile Include="TweenType.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

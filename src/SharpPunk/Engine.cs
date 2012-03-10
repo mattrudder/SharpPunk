@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Reflection;
 using SharpPunk.Platform;
 using SharpPunk.Platform.Windows;
 
@@ -17,6 +20,8 @@ namespace SharpPunk
 			FrameRate = frameRate;
 			Fixed = fixedFps;
 			Elapsed = 0.0f;
+
+			m_world = null;
 
 			Screen = new Screen();
 		}
@@ -61,6 +66,10 @@ namespace SharpPunk
 			SetCamera();
 		}
 
+		protected virtual void OnInitialize()
+		{
+		}
+
 		void EnterFrame()
 		{
 			m_renderContext.BeginDraw();
@@ -77,10 +86,29 @@ namespace SharpPunk
 
 		void Initialize()
 		{
+			// Search entities for EmbedAttribute
+			Type[] entityTypes = Assembly.GetEntryAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Entity))).ToArray();
+			foreach (Type type in entityTypes)
+			{
+				FieldInfo[] fields = type.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+				foreach (FieldInfo field in fields)
+				{
+					EmbedAttribute embed = (EmbedAttribute) field.GetCustomAttributes(typeof (EmbedAttribute), false).SingleOrDefault();
+					if (embed != null)
+					{
+						Console.WriteLine("TODO: Embed attribute with source {0}", embed.Source);
+						field.SetValue(null, new ResourceInfo(embed.Source));
+					}
+				}
+			}
+
+
 			m_window = s_platformFactory.CreateWindow((int) Width, (int) Height);
 			m_renderContext = s_platformFactory.CreateRenderContext(m_window);
 
 			IsRunning = true;
+
+			OnInitialize();
 		}
 
 		protected static void Run(Engine instance)
@@ -103,7 +131,7 @@ namespace SharpPunk
 #endif
 		}
 
-		static readonly IPlatformFactory s_platformFactory;
+		static readonly PlatformFactory s_platformFactory;
 		
 		Window m_window;
 		
@@ -112,14 +140,4 @@ namespace SharpPunk
 		
 		IRenderContext m_renderContext;
 	}
-
-	public class World
-	{
-	}
-
-	public class Screen
-	{
-	}
-
-
 }

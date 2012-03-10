@@ -7,11 +7,21 @@ namespace SharpPunk.Platform.Windows
 {
 	internal class FormsWindow : Window
 	{
-		public FormsWindow(int width, int height)
+		public FormsWindow(int width, int height, string title, string iconFile)
 		{
-			m_form = new RenderForm("SharpPunk")
+			Icon icon = null;
+			try
 			{
-				ClientSize = new Size(width, height)
+				icon = new Icon(iconFile);
+			}
+			catch (ArgumentException) { }
+			
+			m_form = new RenderForm(title ?? "SharpPunk")
+			{
+				ClientSize = new Size(width, height),
+				MaximizeBox = false,
+				FormBorderStyle = FormBorderStyle.Fixed3D,
+				Icon = icon ?? SystemIcons.Application,
 			};
 			m_form.Show();
 		}

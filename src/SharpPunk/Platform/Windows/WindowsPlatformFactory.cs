@@ -4,19 +4,19 @@ using SharpDX.Windows;
 
 namespace SharpPunk.Platform.Windows
 {
-	internal sealed class WindowsPlatformFactory : IPlatformFactory
+	internal sealed class WindowsPlatformFactory : PlatformFactory
 	{
-		public Window CreateWindow(int width, int height)
+		public override Window CreateWindow(int width, int height, string title, string iconFile)
 		{
-			return new FormsWindow(width, height);
+			return new FormsWindow(width, height, title, iconFile);
 		}
 
-		public IRenderContext CreateRenderContext(Window window)
+		public override IRenderContext CreateRenderContext(Window window)
 		{
 			return new Direct3D10RenderContext(window);
 		}
 
-		public void RunRenderLoop(Window window, Func<bool> fnFrame)
+		public override void RunRenderLoop(Window window, Func<bool> fnFrame)
 		{
 			FormsWindow formWin = (FormsWindow) window;
 			RenderLoop.Run(formWin.Form, () =>
